@@ -76,3 +76,15 @@ def plot_histo(frm, col, rozsah, nbins=20):
     df_hist = pl.DataFrame({'x': x, 'y': y})  # pomocna frejma
     return px.bar(df_hist, x='x', y='y', barmode='group', 
                   labels={'x': xlabel, 'y': 'početnosť', 'variable': 'hodnota'}, width=900, height=350)
+
+# z NB _06
+
+def map_plot(frm, day, hour, pick=True):   # pick=False znamena, ze drop
+    col_prefix = 'pick_' if pick else 'drop_'
+    df_dh = frm.filter((pl.col(f'{col_prefix}dt').dt.day() == day) & (pl.col(f'{col_prefix}dt').dt.hour() == hour))
+    mapa = px.scatter_mapbox(df_dh, lat=f'{col_prefix}lat', lon=f'{col_prefix}lon', mapbox_style="open-street-map", 
+                         zoom=10, color_discrete_sequence=["darkblue"], width=500, height=500, opacity=0.3,
+                         title=f'Počet jázd: {df_dh.shape[0]}')
+    mapa.update_traces(marker={"size": 4})
+    mapa.update_layout(margin={'t': 30, 'b': 10}, hovermode=False)
+    return mapa
