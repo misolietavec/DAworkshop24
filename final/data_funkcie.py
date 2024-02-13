@@ -2,6 +2,9 @@ import polars as pl
 import plotly.express as px
 import numpy as np
 
+# Zakladna frejma, vsetko pochadza z nej
+df = pl.read_parquet('data/nyc_taxi310k.parq')
+
 # Tu budeme pridavat funkcie pre spracovanie dat a kreslenie
 
 # z NB 03_
@@ -18,9 +21,12 @@ def monthly_frame(frm, day=True):      # nazvy stplcov v datafrejme mozu byt aj 
     df_month = df_month.rename({'pick_dt': column})   # pick_dt sa tu nehodi, bude pick_day alebo pick_hour
     return df_month
 
+# Budeme mat radiobox s volbami ['Podľa dní','Podľa hodín', 'Dni v týždni (nástupy)']
 
-def monthly_plot(frm, day=True):
-    mframe = monthly_frame(frm, day)
+def monthly_plot(dhc):
+    day = (dhc == 'Podľa dní')
+    xcol = 'pick_day' if day else 'pick_hour'
+    mframe = monthly_frame(df, day)
     xcol = 'pick_day' if day else 'pick_hour'
     xlabel = {'pick_day': 'Deň', 'pick_hour': 'Hodina'}
     xticks = {'pick_day': list(range(1, 32)), 'pick_hour': list(range(24))}
@@ -42,6 +48,13 @@ def week_plot(frm):
     graf.update_layout(xaxis=dict(tickmode='array', tickvals=list(range(1, 8)), title='Deň v týždni',
                        ticktext=xtext, tickangle=0), yaxis=dict(title="Priem. počet jázd"))
     return graf
+
+# v aplikacii budu tie tri grafy - mesacne podla hodin, dni a tyzdenny v jednej 'zalozke'
+
+def view_month_week(doh):
+    if doh in ['Podľa dní', 'Podľa hodín']:
+        return monthly_plot(doh)
+    return week_plot(df)
 
 # z NB 04_
 
