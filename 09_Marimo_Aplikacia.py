@@ -6,16 +6,14 @@ app = marimo.App(width="full")
 
 @app.cell
 def _():
-    import polars as pl
-    from final.data_funkcie import df, pick_plot, drop_plot, monthly_plot, week_plot, daily_plot, plot_histo
+    from final.data_funkcie import df, pick_plot, drop_plot, view_month_week, week_plot, daily_plot, plot_histo
     return (
         daily_plot,
         df,
         drop_plot,
-        monthly_plot,
         pick_plot,
-        pl,
         plot_histo,
+        view_month_week,
         week_plot,
     )
 
@@ -35,16 +33,8 @@ def _(mo):
 
 
 @app.cell
-def _(day_hour_choose, df, mo, monthly_plot, week_plot):
-    def _view_monthly(dhc):
-        if  dhc == 'Podľa dní':
-            return monthly_plot(df, day=True)
-        elif dhc == 'Podľa hodín':
-            return monthly_plot(df, day=False)
-        else:
-            return week_plot(df)
-
-    tab_monthly = mo.vstack([day_hour_choose, _view_monthly(day_hour_choose.value)])
+def _(day_hour_choose, mo, view_month_week):
+    tab_monthly = mo.vstack([day_hour_choose, view_month_week(day_hour_choose.value)])
     return tab_monthly,
 
 
