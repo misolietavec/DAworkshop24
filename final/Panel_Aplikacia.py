@@ -1,6 +1,6 @@
 import panel as pn
 import panel.widgets as pnw
-from final.data_funkcie import pick_plot, drop_plot, view_month_week, daily_plot, histo_dists, histo_times 
+from data_funkcie import pick_plot, drop_plot, view_month_week, daily_plot, histo_dists, histo_times 
 pn.extension('plotly', 'ipywidgets')
 
 # widgety, graficke prvky
