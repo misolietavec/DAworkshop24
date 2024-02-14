@@ -1,4 +1,5 @@
 *~
+data/nyc_taxi_rt.parq
 __pycache__/
 *.py[cod]
 
