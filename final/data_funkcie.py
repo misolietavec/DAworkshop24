@@ -68,7 +68,7 @@ def daily_frame(frm):   # vyvolame s df ako frm
     return df_days
 
 
-def daily_plot(day): # frm tu bude povyssia df_days
+def daily_plot(day): # frm tu bude povyssia df_days, day bude z radio day_choose
     frm_d = daily_frame(df)
     frm_day = frm_d.filter(pl.col('pick_day') == day).sort(by='pick_hour')
     pass_fares_plot = px.bar(frm_day, x='pick_hour', y=['pass_count', 'fares_count'], barmode='group',
@@ -93,6 +93,12 @@ def plot_histo(col, rozsah, nbins=20):
     df_hist = pl.DataFrame({'x': x, 'y': y})  # pomocna frejma
     return px.bar(df_hist, x='x', y='y', barmode='group', 
                   labels={'x': xlabel, 'y': 'početnosť', 'variable': 'hodnota'}, width=900, height=350)
+
+def histo_dists(bins):
+    return plot_histo('distance', (0, 8), bins)
+
+def histo_times(bins):
+    return plot_histo('rtimes', (0, 35), bins)
 
 # z NB _06
 
