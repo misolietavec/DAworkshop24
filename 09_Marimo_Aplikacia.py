@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.2.2"
+__generated_with = "0.2.5"
 app = marimo.App(width="full")
 
 
@@ -66,7 +66,7 @@ def _(mo, nbins_choose, plot_histo):
 
 @app.cell
 def _(mo, tab_daily, tab_histo, tab_map, tab_monthly):
-    tabs = mo.tabs({'Grafy mesačné': tab_monthly, 'Miesta na mape': tab_map, 
+    tabs = mo.ui.tabs({'Grafy mesačné': tab_monthly, 'Miesta na mape': tab_map, 
                        'Grafy po dňoch': tab_daily, "Histogramy": tab_histo})
     return tabs,
 
