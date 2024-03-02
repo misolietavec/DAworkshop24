@@ -9,8 +9,6 @@ df = pl.read_parquet('data/nyc_taxi310k.parq')
 
 # z NB 03_
 
-df = pl.read_parquet('data/nyc_taxi310k.parq')
-
 def monthly_frame(frm, day=True):      # nazvy stplcov v datafrejme mozu byt aj po slovensky :-)
     groupped = frm.group_by(pl.col('pick_dt').dt.day()) if day else\
                frm.group_by(pl.col('pick_dt').dt.hour())         
@@ -79,26 +77,22 @@ def daily_plot(day): # frm tu bude povyssia df_days, day bude z radio day_choose
 
 # z NB 05_
 
-def dt_frame(frm): # frm bude povodna df
-    df_dt = frm.with_columns(((pl.col('drop_dt') - pl.col('pick_dt')).cast(pl.Float32)/1000/60).alias('rtimes'))
-    df_dt = df_dt.drop(['pick_dt', 'drop_dt'])
-    return df_dt
-
-
-def plot_histo(col, rozsah, nbins=20):
+def plot_histo(col, rozsah, nbins=20, quant=0.5):
     xlabel = 'Vzdialenosť (míle)' if col == 'distance' else 'Čas jazdy'
-    frm_dt = dt_frame(df)
+    frm_dt = df.select('distance', 'rtime')
     y, x = np.histogram(frm_dt[col], range=rozsah, bins=nbins)
     x = (x[0:-1] + x[1:]) / 2  # stredy intervalov, nie konce
     df_hist = pl.DataFrame({'x': x, 'y': y})  # pomocna frejma
-    return px.bar(df_hist, x='x', y='y', barmode='group', 
-                  labels={'x': xlabel, 'y': 'početnosť', 'variable': 'hodnota'}, width=900, height=350)
+    rt_plot = px.bar(df_hist, x='x', y='y', barmode='group', 
+                     labels={'x': xlabel, 'y': 'početnosť', 'variable': 'hodnota'}, width=900, height=350)
+    rt_plot.add_vline(df[col].quantile(quant / 100), line={'color':'red'})
+    return rt_plot
 
-def histo_dists(bins):
-    return plot_histo('distance', (0, 8), bins)
+def histo_dists(bins, quant):
+    return plot_histo('distance', (0, 9), bins, quant)
 
-def histo_times(bins):
-    return plot_histo('rtimes', (0, 35), bins)
+def histo_times(bins, quant):
+    return plot_histo('rtime', (0, 35), bins, quant)
 
 # z NB _06
 
