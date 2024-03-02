@@ -1,18 +1,19 @@
 import marimo
 
-__generated_with = "0.2.7"
+__generated_with = "0.2.13"
 app = marimo.App(width="full")
 
 
 @app.cell
 def _():
-    from final.data_funkcie import df, pick_plot, drop_plot, view_month_week, week_plot, daily_plot, plot_histo
+    from final.data_funkcie import df, pick_plot, drop_plot, view_month_week, week_plot, daily_plot, histo_dists, histo_times
     return (
         daily_plot,
         df,
         drop_plot,
+        histo_dists,
+        histo_times,
         pick_plot,
-        plot_histo,
         view_month_week,
         week_plot,
     )
@@ -29,7 +30,16 @@ def _(mo):
                                   value= 'Podľa dní', inline=True)
     # pre histogramy
     nbins_choose = mo.ui.slider(start=10, stop=120, value=20, label='Počet tried', debounce=True)
-    return day_choose, day_hour_choose, direction, hour_choose, nbins_choose
+    # percentily pre histogramy, nove
+    quant_choose = mo.ui.slider(start=5, stop=95, step=5, value=50, label='Percentil', debounce=True)
+    return (
+        day_choose,
+        day_hour_choose,
+        direction,
+        hour_choose,
+        nbins_choose,
+        quant_choose,
+    )
 
 
 @app.cell
@@ -40,7 +50,7 @@ def _(day_hour_choose, mo, view_month_week):
 
 @app.cell
 def _(day_choose, drop_plot, hour_choose, mo, pick_plot):
-    tab_map = mo.vstack([mo.hstack([day_choose, hour_choose]), 
+    tab_map = mo.vstack([mo.hstack([day_choose, hour_choose], justify='start'), 
                         mo.hstack([pick_plot(day_choose.value, hour_choose.value), 
                                    drop_plot(day_choose.value, hour_choose.value)])])
     return tab_map,
@@ -53,14 +63,10 @@ def _(daily_plot, day_choose, mo):
 
 
 @app.cell
-def _(mo, nbins_choose, plot_histo):
-    def _histo_dists(bins):
-        return plot_histo('distance', (0, 8), bins)
-    def _histo_times(bins):
-        return plot_histo('rtimes', (0, 35), bins)
-
-    tab_histo = mo.vstack([nbins_choose, _histo_dists(nbins_choose.value), 
-                              _histo_times(nbins_choose.value)])
+def _(histo_dists, histo_times, mo, nbins_choose, quant_choose):
+    tab_histo = mo.vstack([mo.hstack([nbins_choose, quant_choose], justify='start'), 
+                           histo_dists(nbins_choose.value, quant_choose.value), 
+                           histo_times(nbins_choose.value, quant_choose.value)])
     return tab_histo,
 
 
