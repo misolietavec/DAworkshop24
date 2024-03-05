@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.2.8"
+__generated_with = "0.2.13"
 app = marimo.App(width="full")
 
 
@@ -19,8 +19,7 @@ def __():
 
 @app.cell
 def __(pl):
-    _dflocal = 'data/nyc_taxi310k.parq'
-    df = pl.read_parquet(_dflocal)
+    df = pl.read_parquet('data/nyc_taxi310k.parq')
     meanloc = [df['pick_lat'].mean(), df['pick_lon'].mean()]
     return df, meanloc
 

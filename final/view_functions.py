@@ -17,9 +17,10 @@ def daily_frame(frm, pick=True):   # vyvolame s df ako frm
 def _daily_plot(frm, day, pick=True): # frm tu bude povyssia df_days, day bude z radio day_choose
     frm_d = daily_frame(frm, pick=pick)
     col_prefix='pick_' if pick else 'drop_'
+    val_label = 'Nástupy' if pick else 'Výstupy'
     frm_day = frm_d.filter(pl.col(f'{col_prefix}day') == day).sort(by=f'{col_prefix}hour')
     pass_fares_plot = px.bar(frm_day, x=f'{col_prefix}hour', y=['pass_count', 'fares_count'], barmode='group', height=350,
-                             labels={f'{col_prefix}hour': 'Hodina', 'value': 'Hodnoty', 'variable': 'Premenná'})
+                             labels={f'{col_prefix}hour': 'Hodina', 'value': val_label, 'variable': 'Premenná'})
     pass_fares_plot.update_layout(xaxis=dict(tickmode='array', tickvals=list(range(24))))
     return pass_fares_plot
 

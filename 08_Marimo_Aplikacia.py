@@ -5,11 +5,16 @@ app = marimo.App(width="full")
 
 
 @app.cell
+def __():
+    import marimo as mo
+    return mo,
+
+
+@app.cell
 def _():
-    from final.data_funkcie import df, pick_plot, drop_plot, view_month_week, week_plot, daily_plot, histo_dists, histo_times
+    from final.data_funkcie import pick_plot, drop_plot, view_month_week, week_plot, daily_plot, histo_dists, histo_times
     return (
         daily_plot,
-        df,
         drop_plot,
         histo_dists,
         histo_times,
@@ -51,8 +56,8 @@ def _(day_hour_choose, mo, view_month_week):
 @app.cell
 def _(day_choose, drop_plot, hour_choose, mo, pick_plot):
     tab_map = mo.vstack([mo.hstack([day_choose, hour_choose], justify='start'), 
-                        mo.hstack([pick_plot(day_choose.value, hour_choose.value), 
-                                   drop_plot(day_choose.value, hour_choose.value)])])
+                         mo.hstack([pick_plot(day_choose.value, hour_choose.value), 
+                                    drop_plot(day_choose.value, hour_choose.value)])])
     return tab_map,
 
 
@@ -92,12 +97,6 @@ def _(mo, nadpis, tabs):
     app = mo.vstack([nadpis, tabs])
     app
     return app,
-
-
-@app.cell
-def _():
-    import marimo as mo
-    return mo,
 
 
 if __name__ == "__main__":
