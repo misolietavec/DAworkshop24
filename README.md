@@ -14,4 +14,5 @@ Docker image with all workshop files can be pulled by
 for creating such (or similar) images. Running with 
 
 `docker run -p 3500:8888 misolietavec/daworkshop` 
+
 will give you Jupyterlab application at `http://127.0.0.1:3500/lab`.
