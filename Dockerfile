@@ -27,7 +27,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 EXPOSE 8888
 WORKDIR /home/jovyan/notebooks
-COPY --chown=jovyan:jovyan marimo /home/jovyan/notebooks
 
 # Configure container startup
 ENTRYPOINT ["tini", "--"]
